@@ -89,7 +89,7 @@ class MenuScene extends Phaser.Scene {
   }
   create() {
 
-   const gereddeDieren = JSON.parse(localStorage.getItem('gereddeDieren') || '[]');
+
 
        this.cameras.main.setBackgroundColor('#a0d8f0'); 
     this.add.text(this.scale.width / 2, 150, 'Dieren Vrienden',{
@@ -164,6 +164,7 @@ this.add.text(this.cameras.main.centerX, 20, 'Bereik het dier om het te redden!'
     const dieren = JSON.parse(localStorage.getItem('gereddeDieren') || '[]');
     return dieren.length;
   }
+     const gereddeDieren = JSON.parse(localStorage.getItem('gereddeDieren') || '[]');
 }
 
 class LeaderboardScene extends Phaser.Scene {
