@@ -177,35 +177,53 @@ class LeaderboardScene extends Phaser.Scene {
     super('LeaderboardScene');
   }
 
- create() {
-  this.cameras.main.setBackgroundColor('#a0d8f0');
-  const centerX = this.cameras.main.centerX;
+  preload() {
+    // Laad dieren afbeeldingen, net als in GameScene
+    for (let i = 1; i <= 23; i++) {
+      this.load.image(`dier${i}`, `assets/images/dier${i}.png`);
+    }
+  }
 
-  this.add.text(centerX, 100, 'Leaderboard', {
-    fontFamily: 'Verdana',
-    fontSize: '28px',
-    fill: '#000',
-    fontStyle: 'bold'
-  }).setOrigin(0.5);
+  create() {
+    this.cameras.main.setBackgroundColor('#a0d8f0');
+    const centerX = this.cameras.main.centerX;
 
-  const leaderboard = JSON.parse(localStorage.getItem('leaderboard') || '[]');
-  leaderboard.sort((a, b) => b.score - a.score);
-
-  leaderboard.slice(0, 5).forEach((entry, index) => {
-    this.add.text(centerX, 160 + index * 30, `${index + 1}. ${entry.naam} - ${entry.score}`, {
+    this.add.text(centerX, 100, 'Leaderboard', {
       fontFamily: 'Verdana',
-      fontSize: '20px',
-      fill: '#000'
+      fontSize: '28px',
+      fill: '#000',
+      fontStyle: 'bold'
     }).setOrigin(0.5);
-  });
 
-  this.input.once('pointerdown', () => {
-    this.scene.start('MenuScene');
-  });
+    let leaderboard = JSON.parse(localStorage.getItem('leaderboard') || '[]');
+    leaderboard.sort((a, b) => b.score - a.score);
+
+    const maxToShow = 5;
+    leaderboard.slice(0, maxToShow).forEach((entry, index) => {
+      const y = 160 + index * 80;
+
+      // Naam en score
+      this.add.text(centerX - 100, y, `${index + 1}. ${entry.naam} - ${entry.score}`, {
+        fontFamily: 'Verdana',
+        fontSize: '20px',
+        fill: '#000'
+      }).setOrigin(0, 0.5);
+
+      // Geredde dieren tonen, als array aanwezig
+      if (entry.gereddeDieren && entry.gereddeDieren.length > 0) {
+        entry.gereddeDieren.forEach((dierIndex, i) => {
+          this.add.image(centerX + 50 + i * 40, y, `dier${dierIndex}`).setScale(0.3).setOrigin(0.5);
+        });
+      } else {
+        this.add.text(centerX + 50, y, 'Geen dieren', { fontSize: '16px', fill: '#555' }).setOrigin(0, 0.5);
+      }
+    });
+
+    this.input.once('pointerdown', () => {
+      this.scene.start('MenuScene');
+    });
+  }
 }
-}
-
-
 class TimerScene extends Phaser.Scene {
   constructor() {
     super({ key: 'TimerScene' });
