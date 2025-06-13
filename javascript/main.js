@@ -89,17 +89,7 @@ class MenuScene extends Phaser.Scene {
   }
   create() {
 
-    this.add.text(centerX, 100, `Voortgang: ${naam} heeft ${naam === 'Onbekend' ? 'nog geen' : gereddeDieren.length} dieren gered`, {
-  fontFamily: 'Verdana',
-  fontSize: '20px',
-  fill: '#000'
-}).setOrigin(0.5);
-    
-this.add.text(this.cameras.main.centerX, 20, 'Bereik het dier om het te redden!', {
-  fontFamily: 'Verdana',
-  fontSize: '20px',
-  fill: '#000'
-}).setOrigin(0.5);
+   
        this.cameras.main.setBackgroundColor('#a0d8f0'); 
     this.add.text(this.scale.width / 2, 150, 'Dieren Vrienden',{
       fontFamily: 'Verdana',
@@ -154,6 +144,18 @@ const leaderboardButton = this.add.text(centerX, 650, 'Bekijk Leaderboard', {
 
     leaderboardButton.on('pointerdown', () => {
       this.scene.start('LeaderboardScene');
+
+       this.add.text(centerX, 100, `Voortgang: ${naam} heeft ${naam === 'Onbekend' ? 'nog geen' : gereddeDieren.length} dieren gered`, {
+  fontFamily: 'Verdana',
+  fontSize: '20px',
+  fill: '#000'
+}).setOrigin(0.5);
+    
+this.add.text(this.cameras.main.centerX, 20, 'Bereik het dier om het te redden!', {
+  fontFamily: 'Verdana',
+  fontSize: '20px',
+  fill: '#000'
+}).setOrigin(0.5);
     });
   }
 
