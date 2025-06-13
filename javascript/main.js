@@ -160,12 +160,17 @@ this.add.text(this.cameras.main.centerX, 20, 'Bereik het dier om het te redden!'
     });
   }
 
+ gereddeDieren = JSON.parse(localStorage.getItem('gereddeDieren') || '[]');
+
   getHighScore() {
     const dieren = JSON.parse(localStorage.getItem('gereddeDieren') || '[]');
     return dieren.length;
   }
-     gereddeDieren = JSON.parse(localStorage.getItem('gereddeDieren') || '[]');
+    
 }
+
+
+
 
 class LeaderboardScene extends Phaser.Scene {
   constructor() {
@@ -613,6 +618,8 @@ class GameOverScene extends Phaser.Scene {
   create() {
     this.cameras.main.setBackgroundColor('#ffcccc');
 
+        localStorage.setItem('gereddeDieren', JSON.stringify([])); // r
+
     const centerX = this.cameras.main.centerX;
     const centerY = this.cameras.main.centerY;
 
@@ -629,6 +636,8 @@ class GameOverScene extends Phaser.Scene {
     }).setOrigin(0.5);
 
     this.input.once('pointerdown', () => {
+      // reset globale score variabele
+      window.score = 0;  // of waar je score ook staat opgeslagen
       this.scene.start('MenuScene');
     });
   }
