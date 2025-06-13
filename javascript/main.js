@@ -4,7 +4,14 @@ class BootScene extends Phaser.Scene {
   }
 
   create() {
-    this.scene.start('MenuScene');
+    // Check of naam al bekend is
+    const naam = localStorage.getItem('spelerNaam');
+    
+    if (!naam) {
+      this.scene.start('NameScene');
+    } else {
+      this.scene.start('MenuScene');
+    }
   }
 }
 
@@ -172,7 +179,7 @@ class LeaderboardScene extends Phaser.Scene {
    // <-- HIER direct na setBackgroundColor
 
   // Haal naam en geredde dieren op uit localStorage
-  const naam = localStorage.getItem('naam') || 'Onbekend';
+  const naam = localStorage.getItem('spelerNaam') || 'Onbekend';
   const gereddeDieren = JSON.parse(localStorage.getItem('gereddeDieren') || '[]');
 
   // Toon voortgang bovenaan
