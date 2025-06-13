@@ -82,35 +82,26 @@ const startKnop = this.add.text(centerX, origineleY, 'Doorgaan', {
     }
   }
 }
-
 class MenuScene extends Phaser.Scene {
   constructor() {
     super('MenuScene');
   }
+
   create() {
-const centerX = this.cameras.main.centerX;
-const leaderboardButton = this.add.text(centerX, 650, 'Bekijk Leaderboard', {
-  fontFamily: 'Verdana',
-  fontSize: '18px',
-  fill: '#000',
-}).setInteractive().setOrigin(0.5);
+    const centerX = this.cameras.main.centerX;
 
-leaderboardButton.on('pointerdown', () => {
-  this.scene.start('LeaderboardScene');
-});
+    this.cameras.main.setBackgroundColor('#a0d8f0');
 
-       this.cameras.main.setBackgroundColor('#a0d8f0'); 
-    this.add.text(this.scale.width / 2, 150, 'Dieren Vrienden',{
+    this.add.text(this.scale.width / 2, 150, 'Dieren Vrienden', {
       fontFamily: 'Verdana',
       fontSize: '32px',
       fill: '#006400',
       fontStyle: 'bold',
     }).setOrigin(0.5);
 
+    const naam = localStorage.getItem('spelerNaam') || 'Onbekend';
 
-
-const naam = localStorage.getItem('spelerNaam') || 'Onbekend';
-const uitlegTekst = `Welkom ${naam}! 
+    const uitlegTekst = `Welkom ${naam}!
 
 Om dit spel te spelen moet jij een dier zien te redden. 
 Als je het dier hebt gevonden, moet je ook nog binnen de tijd het memoryspel oplossen. 
@@ -118,44 +109,47 @@ Daarna wordt het spel steeds moeilijker.
 
 Zorg dat jij zo veel mogelijk dieren redt en probeer de highscore te halen!`;
 
-this.add.text(centerX, 200, uitlegTekst, {
-  fontFamily: 'Verdana',
-  fontSize: '20px',
-  fill: '#000',
-  align: 'center',
-  wordWrap: { width: 600 } // 👈 pas breedte aan aan jouw canvas
-}).setOrigin(0.5, 0);
+    this.add.text(centerX, 200, uitlegTekst, {
+      fontFamily: 'Verdana',
+      fontSize: '20px',
+      fill: '#000',
+      align: 'center',
+      wordWrap: { width: 600 }
+    }).setOrigin(0.5, 0);
 
+    const highScore = this.getHighScore();
+    this.add.text(centerX, 480, `High score: ${highScore} dieren gered`, {
+      fontFamily: 'Verdana',
+      fontSize: '20px',
+      fill: '#000'
+    }).setOrigin(0.5);
 
-const highScore = this.getHighScore();
-this.add.text(centerX, 480, `High score: ${highScore} dieren gered`, {
-  fontFamily: 'Verdana',
-  fontSize: '20px',
-  fill: '#000'
-}).setOrigin(0.5);
+    const startButton = this.add.text(centerX, 550, 'Start Spel', {
+      fontFamily: 'Verdana',
+      fontSize: '24px',
+      fill: '#000',
+    }).setInteractive().setOrigin(0.5);
 
-const startButton = this.add.text(centerX, 550, 'Start Spel', {
-  fontFamily: 'Verdana',
-  fontSize: '24px',
-  fill: '#000',
-}).setInteractive().setOrigin(0.5);
+    startButton.on('pointerdown', () => {
+      this.scene.start('NameScene'); // Pas dit eventueel aan naar 'GameScene'
+    });
 
-leaderboardButton.on('pointerdown', () => {
-  this.scene.start('LeaderboardScene');
-});
+    const leaderboardButton = this.add.text(centerX, 650, 'Bekijk Leaderboard', {
+      fontFamily: 'Verdana',
+      fontSize: '18px',
+      fill: '#000',
+    }).setInteractive().setOrigin(0.5);
 
+    leaderboardButton.on('pointerdown', () => {
+      this.scene.start('LeaderboardScene');
+    });
+  }
 
-
-}
-
-getHighScore() {
+  getHighScore() {
     const dieren = JSON.parse(localStorage.getItem('gereddeDieren') || '[]');
     return dieren.length;
-     gereddeDieren = JSON.parse(localStorage.getItem('gereddeDieren') || '[]');
   }
-    
 }
-
 
 
 
