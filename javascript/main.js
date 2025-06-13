@@ -88,8 +88,16 @@ class MenuScene extends Phaser.Scene {
     super('MenuScene');
   }
   create() {
+const centerX = this.cameras.main.centerX;
+const leaderboardButton = this.add.text(centerX, 650, 'Bekijk Leaderboard', {
+  fontFamily: 'Verdana',
+  fontSize: '18px',
+  fill: '#000',
+}).setInteractive().setOrigin(0.5);
 
-
+leaderboardButton.on('pointerdown', () => {
+  this.scene.start('LeaderboardScene');
+});
 
        this.cameras.main.setBackgroundColor('#a0d8f0'); 
     this.add.text(this.scale.width / 2, 150, 'Dieren Vrienden',{
@@ -99,7 +107,7 @@ class MenuScene extends Phaser.Scene {
       fontStyle: 'bold',
     }).setOrigin(0.5);
 
-   const centerX = this.cameras.main.centerX;
+
 
 const naam = localStorage.getItem('spelerNaam') || 'Onbekend';
 const uitlegTekst = `Welkom ${naam}! 
@@ -132,39 +140,18 @@ const startButton = this.add.text(centerX, 550, 'Start Spel', {
   fill: '#000',
 }).setInteractive().setOrigin(0.5);
 
-const leaderboardButton = this.add.text(centerX, 650, 'Bekijk Leaderboard', {
-  fontFamily: 'Verdana',
-  fontSize: '18px',
-  fill: '#000',
-}).setInteractive().setOrigin(0.5);
+leaderboardButton.on('pointerdown', () => {
+  this.scene.start('LeaderboardScene');
+});
 
 
-    startButton.on('pointerdown', () => {
-      this.scene.start('NameScene'); // Start direct met NameScene
-    });
 
-    leaderboardButton.on('pointerdown', () => {
-      this.scene.start('LeaderboardScene');
+}
 
-       this.add.text(centerX, 100, `Voortgang: ${naam} heeft ${naam === 'Onbekend' ? 'nog geen' : gereddeDieren.length} dieren gered`, {
-  fontFamily: 'Verdana',
-  fontSize: '20px',
-  fill: '#000'
-}).setOrigin(0.5);
-    
-this.add.text(this.cameras.main.centerX, 20, 'Bereik het dier om het te redden!', {
-  fontFamily: 'Verdana',
-  fontSize: '20px',
-  fill: '#000'
-}).setOrigin(0.5);
-    });
-  }
-
- gereddeDieren = JSON.parse(localStorage.getItem('gereddeDieren') || '[]');
-
-  getHighScore() {
+getHighScore() {
     const dieren = JSON.parse(localStorage.getItem('gereddeDieren') || '[]');
     return dieren.length;
+     gereddeDieren = JSON.parse(localStorage.getItem('gereddeDieren') || '[]');
   }
     
 }
@@ -185,45 +172,67 @@ class LeaderboardScene extends Phaser.Scene {
   }
 
   create() {
-    this.cameras.main.setBackgroundColor('#a0d8f0');
-    const centerX = this.cameras.main.centerX;
+     const centerX = this.cameras.main.centerX; 
+  this.cameras.main.setBackgroundColor('#a0d8f0');
 
-    this.add.text(centerX, 100, 'Leaderboard', {
+   // <-- HIER direct na setBackgroundColor
+
+  // Haal naam en geredde dieren op uit localStorage
+  const naam = localStorage.getItem('naam') || 'Onbekend';
+  const gereddeDieren = JSON.parse(localStorage.getItem('gereddeDieren') || '[]');
+
+  // Toon voortgang bovenaan
+  this.add.text(centerX, 50, `Voortgang: ${naam} heeft ${gereddeDieren.length} dieren gered`, {
+    fontFamily: 'Verdana',
+    fontSize: '20px',
+    fill: '#000'
+  }).setOrigin(0.5);
+
+  // Eventuele instructietekst
+  this.add.text(centerX, 20, 'Bereik het dier om het te redden!', {
+    fontFamily: 'Verdana',
+    fontSize: '20px',
+    fill: '#000'
+  }).setOrigin(0.5);
+
+  this.add.text(centerX, 100, 'Leaderboard', {
+    fontFamily: 'Verdana',
+    fontSize: '28px',
+    fill: '#000',
+    fontStyle: 'bold'
+  }).setOrigin(0.5);
+
+  let leaderboard = JSON.parse(localStorage.getItem('leaderboard') || '[]');
+  leaderboard.sort((a, b) => b.score - a.score);
+
+  const maxToShow = 5;
+  leaderboard.slice(0, maxToShow).forEach((entry, index) => {
+    const y = 160 + index * 80;
+
+    // Naam en score
+    this.add.text(centerX - 100, y, `${index + 1}. ${entry.naam} - ${entry.score}`, {
       fontFamily: 'Verdana',
-      fontSize: '28px',
-      fill: '#000',
-      fontStyle: 'bold'
-    }).setOrigin(0.5);
+      fontSize: '20px',
+      fill: '#000'
+    }).setOrigin(0, 0.5);
 
-    let leaderboard = JSON.parse(localStorage.getItem('leaderboard') || '[]');
-    leaderboard.sort((a, b) => b.score - a.score);
+    // Geredde dieren tonen, als array aanwezig
+    if (entry.gereddeDieren && entry.gereddeDieren.length > 0) {
+      entry.gereddeDieren.forEach((dierIndex, i) => {
+        this.add.image(centerX + 50 + i * 40, y, `dier${dierIndex}`).setScale(0.3).setOrigin(0.5);
+      });
+    } else {
+      this.add.text(centerX + 50, y, 'Geen dieren', { fontSize: '16px', fill: '#555' }).setOrigin(0, 0.5);
+    }
+  });
 
-    const maxToShow = 5;
-    leaderboard.slice(0, maxToShow).forEach((entry, index) => {
-      const y = 160 + index * 80;
-
-      // Naam en score
-      this.add.text(centerX - 100, y, `${index + 1}. ${entry.naam} - ${entry.score}`, {
-        fontFamily: 'Verdana',
-        fontSize: '20px',
-        fill: '#000'
-      }).setOrigin(0, 0.5);
-
-      // Geredde dieren tonen, als array aanwezig
-      if (entry.gereddeDieren && entry.gereddeDieren.length > 0) {
-        entry.gereddeDieren.forEach((dierIndex, i) => {
-          this.add.image(centerX + 50 + i * 40, y, `dier${dierIndex}`).setScale(0.3).setOrigin(0.5);
-        });
-      } else {
-        this.add.text(centerX + 50, y, 'Geen dieren', { fontSize: '16px', fill: '#555' }).setOrigin(0, 0.5);
-      }
-    });
-
-    this.input.once('pointerdown', () => {
-      this.scene.start('MenuScene');
-    });
-  }
+  this.input.once('pointerdown', () => {
+    this.scene.start('MenuScene');
+  });
 }
+}
+
+
 
 class TimerScene extends Phaser.Scene {
   constructor() {
@@ -681,23 +690,29 @@ class TussenScene extends Phaser.Scene {
 
     let leaderboard = JSON.parse(localStorage.getItem('leaderboard') || '[]');
     const score = gereddeDieren.length;
+
     const bestaande = leaderboard.find(entry => entry.naam === spelerNaam);
 
     if (bestaande) {
       if (score > bestaande.score) {
         bestaande.score = score;
+        bestaande.gereddeDieren = gereddeDieren; // ✅ voeg toe
       }
     } else {
-      leaderboard.push({ naam: spelerNaam, score });
+      leaderboard.push({
+        naam: spelerNaam,
+        score: score,
+        gereddeDieren: gereddeDieren // ✅ voeg toe
+      });
     }
 
-    // Sorteer leaderboard op score (hoog naar laag)
+    // Sorteer op score (hoog naar laag)
     leaderboard.sort((a, b) => b.score - a.score);
 
-    // Bewaar leaderboard weer lokaal op
+    // ✅ Opslaan naar localStorage
     localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
 
-    // Knop om door te gaan
+    // Knop om verder te gaan
     const doorgaan = this.add.text(centerX, 300, 'Ga verder', {
       fontFamily: 'Verdana',
       fontSize: '24px',
@@ -708,7 +723,7 @@ class TussenScene extends Phaser.Scene {
     }).setOrigin(0.5).setInteractive();
 
     doorgaan.on('pointerdown', () => {
-      this.scene.start('GameScene');  // Ga terug naar GameScene voor volgende ronde
+      this.scene.start('GameScene'); // Volgende ronde
     });
   }
 }
