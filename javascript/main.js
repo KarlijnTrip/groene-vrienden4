@@ -343,7 +343,7 @@ platform.setScale(scaleX, 1).refreshBody();
 
   // Dier op schaal
   this.dierIndex = Phaser.Math.Between(1, 23);
-  this.dier = this.physics.add.sprite(this.cameras.main.width * 0.85, this.cameras.main.height * 0.2, `dier${this.dierIndex}`).setScale(0.5);
+  this.dier = this.physics.add.sprite(this.cameras.main.width * 0.9, this.cameras.main.height * 0.2, `dier${this.dierIndex}`).setScale(0.5);
   this.dier.setBounce(0.5);
   this.physics.add.collider(this.dier, this.platforms);
 
