@@ -88,6 +88,18 @@ class MenuScene extends Phaser.Scene {
     super('MenuScene');
   }
   create() {
+
+    this.add.text(centerX, 100, `Voortgang: ${naam} heeft ${naam === 'Onbekend' ? 'nog geen' : gereddeDieren.length} dieren gered`, {
+  fontFamily: 'Verdana',
+  fontSize: '20px',
+  fill: '#000'
+}).setOrigin(0.5);
+    
+this.add.text(this.cameras.main.centerX, 20, 'Bereik het dier om het te redden!', {
+  fontFamily: 'Verdana',
+  fontSize: '20px',
+  fill: '#000'
+}).setOrigin(0.5);
        this.cameras.main.setBackgroundColor('#a0d8f0'); 
     this.add.text(this.scale.width / 2, 150, 'Dieren Vrienden',{
       fontFamily: 'Verdana',
@@ -464,6 +476,13 @@ class MemoryScene extends Phaser.Scene {
     this.cameras.main.setBackgroundColor('#a8d5a2'); // lichtgroen, rustgevend
 
     this.dierIndex = data.dierIndex;
+
+    this.add.text(this.cameras.main.centerX, 50, 'Vind alle paren om het dier te redden!Klik op de vierkantjes om de kaart om te draaien', {
+  fontFamily: 'Verdana',
+  fontSize: '22px',
+  fill: '#000'
+}).setOrigin(0.5);
+
 
   const moeilijkheid = JSON.parse(localStorage.getItem('gereddeDieren') || '[]').length;
 let aantalParen = 3 + Math.min(moeilijkheid, 3);
