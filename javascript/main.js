@@ -89,7 +89,8 @@ class MenuScene extends Phaser.Scene {
   }
   create() {
 
-   
+   const gereddeDieren = JSON.parse(localStorage.getItem('gereddeDieren') || '[]');
+
        this.cameras.main.setBackgroundColor('#a0d8f0'); 
     this.add.text(this.scale.width / 2, 150, 'Dieren Vrienden',{
       fontFamily: 'Verdana',
