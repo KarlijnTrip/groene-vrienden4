@@ -224,6 +224,7 @@ class LeaderboardScene extends Phaser.Scene {
     });
   }
 }
+
 class TimerScene extends Phaser.Scene {
   constructor() {
     super({ key: 'TimerScene' });
