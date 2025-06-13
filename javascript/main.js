@@ -164,7 +164,7 @@ this.add.text(this.cameras.main.centerX, 20, 'Bereik het dier om het te redden!'
     const dieren = JSON.parse(localStorage.getItem('gereddeDieren') || '[]');
     return dieren.length;
   }
-     const gereddeDieren = JSON.parse(localStorage.getItem('gereddeDieren') || '[]');
+     gereddeDieren = JSON.parse(localStorage.getItem('gereddeDieren') || '[]');
 }
 
 class LeaderboardScene extends Phaser.Scene {
