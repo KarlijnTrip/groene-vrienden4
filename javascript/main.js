@@ -676,6 +676,13 @@ class TussenScene extends Phaser.Scene {
     super('TussenScene');
   }
 
+  preload() {
+    // Zorg dat alle dier-afbeeldingen beschikbaar zijn
+    for (let i = 1; i <= 23; i++) {
+      this.load.image(`dier${i}`, `assets/images/dier${i}.png`);
+    }
+  }
+
   create() {
     this.cameras.main.setBackgroundColor('#a0d8f0');
 
@@ -683,52 +690,56 @@ class TussenScene extends Phaser.Scene {
     const gereddeDieren = JSON.parse(localStorage.getItem('gereddeDieren') || '[]');
     const spelerNaam = localStorage.getItem('spelerNaam') || 'Onbekend';
 
-    this.add.text(centerX, 150, `Je hebt nu ${gereddeDieren.length} dieren gered!`, {
+    // Titeltekst
+    this.add.text(centerX, 100, `Je hebt nu ${gereddeDieren.length} dieren gered!`, {
       fontFamily: 'Verdana',
       fontSize: '26px',
       fill: '#000'
     }).setOrigin(0.5);
 
+    // 🖼️ Toon alle geredde dieren als plaatje
+    const dierenPerRij = 6;
+    const spacing = 70;
+    const startX = centerX - ((dierenPerRij - 1) * spacing) / 2;
+    const startY = 150;
+
+    gereddeDieren.forEach((index, i) => {
+      const x = startX + (i % dierenPerRij) * spacing;
+      const y = startY + Math.floor(i / dierenPerRij) * spacing;
+
+      this.add.image(x, y, `dier${index}`).setScale(0.5);
+    });
+
+    // 📊 Leaderboard bijwerken
     let leaderboard = JSON.parse(localStorage.getItem('leaderboard') || '[]');
     const score = gereddeDieren.length;
-
     const bestaande = leaderboard.find(entry => entry.naam === spelerNaam);
 
     if (bestaande) {
       if (score > bestaande.score) {
         bestaande.score = score;
-        bestaande.gereddeDieren = gereddeDieren; // ✅ voeg toe
       }
     } else {
-      leaderboard.push({
-        naam: spelerNaam,
-        score: score,
-        gereddeDieren: gereddeDieren // ✅ voeg toe
-      });
+      leaderboard.push({ naam: spelerNaam, score });
     }
 
-    // Sorteer op score (hoog naar laag)
     leaderboard.sort((a, b) => b.score - a.score);
-
-    // ✅ Opslaan naar localStorage
     localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
 
-    // Knop om verder te gaan
-    const doorgaan = this.add.text(centerX, 300, 'Ga verder', {
+    // ➡️ Ga verder knop
+    const doorgaan = this.add.text(centerX, this.cameras.main.height - 80, 'Ga verder', {
       fontFamily: 'Verdana',
       fontSize: '24px',
       fill: '#000',
       backgroundColor: '#fff',
       padding: { x: 10, y: 5 },
-      borderRadius: 5
     }).setOrigin(0.5).setInteractive();
 
     doorgaan.on('pointerdown', () => {
-      this.scene.start('GameScene'); // Volgende ronde
+      this.scene.start('GameScene');
     });
   }
 }
-
 class ResultaatScene extends Phaser.Scene {
   constructor() {
     super('ResultaatScene');
